@@ -2,15 +2,21 @@
 //------------ Variqables -----------------
 var WorkDoc;
 var descrObj = {};
+//descrObj.ukr = true
 //-----------------------------------------
 WorkDoc = function(item){
     this.path = item.path,
     this.name = item.name,//string
-    this.resolve = item.resolution,//number
+    descrObj.resolve = item.resolution,//number разрешение файла
     this.docname = (function(){
     var tmp01 = item.name.split(".");
         descrObj.name = tmp01[0];
-    }()), //string descrObj -> имя файла
+    }()), //string descrObj -> имя файла как строка
+    this.ukr = (function(){
+switch (true) {
+            case (ukrPat.test(descrObj.name)):
+                descrObj.ukr = true}
+    }()),
     this.sizesInMM = (function(){
     var tmp02 = descrObj.name.match(regPat);
     tmp02 = tmp02[0].split(regPatforX);
@@ -28,9 +34,30 @@ this.construct = (function () {
                 break inner;
         }
     }
-    descrObj.construct = out;
+    descrObj.construct = out; //добавляет маркер конструкции в свойства объекта
     return
 }())
-this
+this.sizesInPx = (function(){
+    descrObj.widthPx = convMmToPx(descrObj.widthMM);
+    descrObj.heightPx = convMmToPx(descrObj.heightMM);
+    return //возвращает значения размеров документа в пикселах
+}())
+//--------------------- CORE ------------------------------
+this.parts = (function(){
+var tmp03 = descrObj.name.split("__");
+tmp03 = tmp03.slice(-1);
+tmp03 = tmp03.toString();
+if(regPat.test(tmp03)){
+tmp03 = tmp03.match(regPat);
+tmp03 = tmp03[0].split(regPatforX);
+descrObj.partWidthInMM = parseInt(tmp03[0]);
+descrObj.partHeightInMM = parseInt(tmp03[2]);
+}
+}()), //определяет, есть ли в имени файла запись о разделении на рамки, записывает размеры рамки в свойтва объекта
+this.quattro = (function(){
+    switch(true) {
+      case (quattroPat.test(descrObj.name)): descrObj.quattro = true;
+    }
+}()), //определяет, есть ли в имени файла запись о рамке кваттро, записывает булевое значение в свойства объекта
 
 };//end of class WorkDoc

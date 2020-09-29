@@ -1,5 +1,8 @@
+//---------------------- VARIABLES ------------------------------
 var regPat = /\d{2,}(x|\u0445|\u0447)\d{2,}/ig; //паттерн для поиска размеров, без учета регистра, ищет все совпадения
 var regPatforX = /(x|\u0445|\u0447)/ig; //паттерн для поиска х, т.е. символа разбивки на ширину и высоту
+var ukrPat = /@ukr/ig;
+var quattroPat = /quat(t)ro|кват(т)ро/ig;
 //-------------------------------------------------------
 var constName = [
     /магвинил|магнит|mag\s*(vinil|vynyl)/i, //01
@@ -27,7 +30,18 @@ var constForm = [
     "krmn50", //08
     "krmn90", //09
     "krmn100", //10
-    "plnk", //11
+    "pvh", //11
     "plnk", //12
     "plot", //13
     ];
+//-------------------------------------------------------
+function convMmToPx(item){
+var myMM = UnitValue(item,"mm");
+	var myPixBase = UnitValue(1/(parseInt(app.activeDocument.resolution)), "in");
+	myMM.baseUnit = myPixBase;
+return Math.round(myMM.as("px"));
+};
+function convPxToMm(item){
+var myPx = UnitValue(item,"px");
+return Math.round((myPx.as("mm")));
+};

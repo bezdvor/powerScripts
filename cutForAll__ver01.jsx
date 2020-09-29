@@ -3,4 +3,6 @@
 
 var init = new WorkDoc(app.activeDocument);
 
-alert(init.path);
+for (var i in descrObj) {
+  alert(descrObj[i])
+};
