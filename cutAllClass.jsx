@@ -1,7 +1,8 @@
 #include cutFunctions.jsx
+#include prepareFunction.jsx
 //------------ Variqables -----------------
 var WorkDoc;
-var descrObj = {};
+var descrObj = {};//объект описания текущего файла
 //descrObj.ukr = true
 //-----------------------------------------
 WorkDoc = function(item){
@@ -36,12 +37,26 @@ this.construct = (function () {
     }
     descrObj.construct = out; //добавляет маркер конструкции в свойства объекта
     return
-}())
+}()),
+this.pvhConstr = (function(){
+if(descrObj.construct == "pvh"){
+    var exitPvh;
+    inner: for (var i = 0; i < pvhConstr.length; i++) {
+        switch (true) {
+            case (pvhConstr[i].test(descrObj.name)):
+                var out = pvhDepth[i];
+                break inner;
+        }
+    }
+    descrObj.pvhConstr = exitPvh; //добавляет маркер конструкции в свойства объекта
+    return
+}
+}()),
 this.sizesInPx = (function(){
     descrObj.widthPx = convMmToPx(descrObj.widthMM);
     descrObj.heightPx = convMmToPx(descrObj.heightMM);
     return //возвращает значения размеров документа в пикселах
-}())
+}()),
 //--------------------- CORE ------------------------------
 this.parts = (function(){
 var tmp03 = descrObj.name.split("__");
@@ -59,5 +74,9 @@ this.quattro = (function(){
       case (quattroPat.test(descrObj.name)): descrObj.quattro = true;
     }
 }()), //определяет, есть ли в имени файла запись о рамке кваттро, записывает булевое значение в свойства объекта
-
+this.bleeds = function(){
+    switch(true) {
+      case (descrObj.ukr == true && descrObj.construct == "rmtk"): ClothUkr(descrObj.widthPx, descrObj.heightPx, descrObj.construct); break;
+    }
+}
 };//end of class WorkDoc
